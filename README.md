@@ -1,48 +1,35 @@
-# trokky-template
+# Trokky templates — build output
 
-A [Trokky](https://trokky.dev) project: a site, the Studio and the API, on Cloudflare Workers.
+Each directory in this repository is a deploy-button target for
+[trokky.build](https://trokky.build): a complete generated Trokky project at
+its own path, so one repository serves every template with one deploy key.
 
-Generated with `npm create trokky@latest`.
+The button on trokky.build points at `https://github.com/Trokky/templates/tree/main/<path>`,
+and Cloudflare's deploy button treats that subdirectory as the project root.
 
-## What is in it
+## This repository is generated
 
-| | |
-|---|---|
-| Content | cloudflare-d1 |
-| Uploads | cloudflare-r2 |
-| Thumbnails | cloudflare-images |
-| Parts | a site, the Studio and the API |
-| Starting content | magazine |
+[Trokky/generator](https://github.com/Trokky/generator)'s
+`.github/workflows/templates.yml` runs after every green CI on that
+repository's main branch (and on manual dispatch): it regenerates each
+directory named by a `templates[]` entry in `manifest.json`, replaces that
+directory in full, and pushes here with a deploy key — but only when the
+result differs from what is already here. Directories no longer listed in
+`manifest.json` are not touched again; they stay where they are.
 
-## Run it
+A manual change under a template directory lasts until the next run replaces
+that directory (a lockfile-only flip is the exception — it neither pushes nor
+overwrites). The sync never touches this README or anything else at the
+repository root; every command it runs is scoped to the directories it
+regenerates.
 
-```
-cp .dev.vars.example .dev.vars   # fill both secrets
-npm install
-npm run build && npm run preview
-```
+To add or change a template, edit `manifest.json` there. Its `templates[]`
+entries set the exact composition each directory is generated from, and the
+same manifest drives trokky.build's buttons — through the published
+create-trokky package the site bundles.
 
-## Deploy
+## One repository, one deploy key
 
-```
-npm run build && npm run deploy
-```
-
-Wrangler provisions the D1 database and R2 bucket named in `wrangler.jsonc` on first deploy.
-`database_id` is intentionally empty: it is bound by name.
-
-## The first minute
-
-Open `/studio`. Nobody owns this instance yet, so the first
-screen asks you to **claim** it: pick a username and password, and paste `TROKKY_CLAIM_SECRET`.
-Sample content appears a moment later — edit it or delete it.
-
-Without a claim secret the claim is open to whoever reaches the URL first. That is fine for the
-minute between deploying and opening the link; it is not fine for an instance left sitting.
-
-## Make it yours
-
-- `src/trokky/schemas.ts` — the content model. The Studio follows it.
-- `src/trokky/structure.ts` — the Studio sidebar.
-- `src/pages/` and `src/layouts/` — the site.
-- `wrangler.jsonc` — the Worker name and its resources.
+GitHub refuses the same deploy key on two repositories, so a template per
+repository would have meant one key per template. One repository, one
+subdirectory per template, one key.
