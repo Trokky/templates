@@ -19,6 +19,8 @@ export interface TrokkyEnv {
   ASSETS: { fetch(request: Request): Promise<Response> }
   TROKKY_JWT_SECRET?: string
   TROKKY_CLAIM_SECRET?: string
+  /** 'development' in .dev.vars for `wrangler dev`; unset when deployed */
+  TROKKY_ENV?: string
 }
 
 export const API_PATH = '/api'
@@ -59,6 +61,9 @@ async function build(env: TrokkyEnv): Promise<Trokky> {
     {
       jwtSecret: env.TROKKY_JWT_SECRET,
       claimSecret: env.TROKKY_CLAIM_SECRET,
+      // A Worker has no NODE_ENV: say production unless .dev.vars says otherwise, so a deploy
+      // without a real signing key refuses to start instead of signing with a random one
+      env: env.TROKKY_ENV === 'development' ? 'development' : 'production',
     },
   )
   // Creates the image processor; nothing serves images without it.
