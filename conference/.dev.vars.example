@@ -10,3 +10,7 @@ TROKKY_JWT_SECRET=
 # one-time token you type once, not a password to remember. Without it the claim is open
 # to whoever reaches the URL first.
 TROKKY_CLAIM_SECRET=
+
+# Local development only: keep this line in .dev.vars and never set it on the deployed
+# Worker, which must run with the production checks.
+TROKKY_ENV=development
