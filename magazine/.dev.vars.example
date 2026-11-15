@@ -11,6 +11,5 @@ TROKKY_JWT_SECRET=
 # to whoever reaches the URL first.
 TROKKY_CLAIM_SECRET=
 
-# Local development only: keep this line in .dev.vars and never set it on the deployed
-# Worker, which must run with the production checks.
-TROKKY_ENV=development
+# For local development, also add TROKKY_ENV=development to your .dev.vars (the
+# README shows how). Never set it on the deployed Worker.
