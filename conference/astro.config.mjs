@@ -5,4 +5,7 @@ import cloudflare from '@astrojs/cloudflare'
 export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
+  // The site keeps no per-visitor state. Left on, the adapter adds a SESSION KV namespace to the
+  // deploy that nothing reads; set a session driver here if a page ever needs Astro.session.
+  session: false,
 })
