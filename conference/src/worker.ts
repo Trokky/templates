@@ -39,6 +39,6 @@ export default {
       return studio(request)
     }
 
-    return handle(request, env as unknown as Env, ctx)
+    return handle(request, env as unknown as Parameters<typeof handle>[1], ctx)
   },
 } satisfies ExportedHandler<TrokkyEnv>
